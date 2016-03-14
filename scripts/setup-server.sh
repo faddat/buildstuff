@@ -8,9 +8,10 @@ cat << "EOF" >/usr/bin/kDaemongrab;
 #!/bin/bash
 cd /root
 go get github.com/klouds/kDaemon
+GOBIN=/usr/bin/ go install github.com/klouds/kDaemon
 git clone https://github.com/klouds/kDaemon
 git clone https://github.com/klouds/kDaemon_ui
-cp $GOPATH/bin/kDaemon /root/kDaemon
+cp /usr/bin/kDaemon /root/kDaemon
 cd kDaemon_ui
 npm install
 EOF
@@ -31,6 +32,7 @@ sh index.html
 #Downloading and installing HAPROXY configuration files
 git clone https://github.com/Klouds/consul-template/
 cd consul-template
+mv haproxy.cfg /etc/haproxy/haproxy.cfg
 wget https://releases.hashicorp.com/consul-template/0.14.0/consul-template_0.14.0_linux_amd64.zip
 unzip consul-template_0.14.0_linux_amd64.zip
 mv consul-template /usr/bin
@@ -130,13 +132,14 @@ After=zerotier.service
 [Service]
 ExecStart=/opt/bin/setup-network-environment
 Type=oneshot
+RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/kdaemon.service;
+cat <<EOF >/etc/systemd/system/kDaemon.service;
 [Unit]
-Description=start klouds stack
+Description=start kDaemon
 After=docker.service
 After=network-online.target
 After=zerotier.service
@@ -144,7 +147,8 @@ Requires=network-online.target
 Requires=/etc/systemd/system/zerotier-one.service
 Requires=docker.service
 [Service]
-ExecStart=/root/.gvm/
+ExecStart=/root/kDaemon/kDaemon
+RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -176,7 +180,7 @@ After=docker.service
 After=network-online.target
 After=zerotier.service
 Requires=network-online.target
-Requires=/etc/systemd/system/zerotier-one.service
+Requires=zerotier-one.service
 Requires=docker.service
 [Service]
 ExecStart=/usr/local/bin/weave launch
@@ -200,6 +204,22 @@ ExecStart=/usr/local/bin/scope launch
 WantedBy=default.target
 EOF
 
+#Consul-template unit file
+cat <<EOF >/etc/systemd/system/consul-template.service;
+[Unit]
+Description=start klouds stack
+After=docker.service
+After=network-online.target
+After=zerotier.service
+Requires=network-online.target
+Requires=/etc/systemd/system/zerotier-one.service
+Requires=docker.service
+[Service]
+ExecStart=/usr/bin/consul-template -consul demo.consul.io -template "/tmp/template.ctmpl:/tmp/result"
+[Install]
+WantedBy=default.target
+EOF
+
 
 #kDaemon configuration file
 cat <<"EOF" >/root/config/app.conf;
@@ -216,11 +236,12 @@ EOF
 systemctl daemon-reload
 systemctl enable haproxy
 systemctl enable consul.service
-systemctl enable kdaemon_ui.service
+systemctl enable kDaemon_ui.service
 systemctl enable server-onboot.service
 systemctl enable docker.service
 systemctl enable setup-network-environment.service
 systemctl enable zerotier.service
-systemctl enable kdaemon.service
-systemctl enable waeave.service
+systemctl enable kDaemon.service
+systemctl enable weave.service
 systemctl enable scope.service
+systemctl enable consul-template.service
