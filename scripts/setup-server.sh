@@ -17,10 +17,10 @@ npm install
 EOF
 
 cat << "EOF" >/usr/bin/kDaemonrun;
+kdaemonconf
 cd /root/kDaemon
 ./kDaemon
 EOF
-
 
 #UPDATING DEBIAN, INSTALL NODEJS
 cd /root/
@@ -53,10 +53,13 @@ mkdir /root/go
 mkdir /storage
 
 #INSTALL RETHINKDB
-sudo echo "deb http://download.rethinkdb.com/apt `lsb_release -cs` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-sudo wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install -y rethinkdb
+echo "deb http://download.rethinkdb.com/apt `lsb_release -cs` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+apt-get update
+apt-get install -y rethinkdb
+cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/instance1.conf
+mkdir /var/lib/rethinkdb/default
+sed -i -e 's/# directory=/var/lib/rethinkdb/default/directory=/var/lib/rethinkdb/default/g' /etc/rethinkdb/instances.d/instance1.conf
 
 #DOWNLOAD AND INSTALL GOLANG
 curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash
@@ -79,6 +82,8 @@ wget -N -P /opt/bin https://github.com/kelseyhightower/setup-network-environment
 chmod a+x /usr/local/bin/weave
 chmod a+x /usr/local/bin/scope
 chmod a+x /opt/bin/setup-network-environment
+chmod a+x /usr/bin/kDaemonrun
+chmod a+x /usr/bin/kDaemongrab
 
 #INSTALLING ZEROTIER
 dpkg -i zerotier-one_1.1.4_amd64.deb
@@ -158,7 +163,7 @@ ExecStart=/usr/bin/kDaemonrun
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/kdaemon-ui.service;
+cat <<EOF >/etc/systemd/system/kDaemon-ui.service;
 [Unit]
 Description=Ghost blog example.org
 After=kdaemon.service
@@ -227,7 +232,8 @@ EOF
 
 
 #kDaemon configuration file
-cat <<"EOF" >/root/config/app.conf;
+cat <<"EOD" >/usr/bin/kdeamonconf
+cat <<EOF >/root/config/app.conf;
 [default]
 bind_ip = $ZT0:2375
 api_port = 4000
@@ -236,6 +242,8 @@ rethinkdb_port = 28015
 rethinkdb_dbname = stupiddbname
 api_version = 0.0
 EOF
+EOD
+chmod a+x kdaemonconf
 
 #get systemd ready to rock when the machine boots and mark boot scripts executable
 systemctl daemon-reload
