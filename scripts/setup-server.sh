@@ -16,6 +16,12 @@ cd kDaemon_ui
 npm install
 EOF
 
+cat << "EOF" >/usr/bin/kDaemonrun;
+cd /root/kDaemon
+./kDaemon
+EOF
+
+
 #UPDATING DEBIAN, INSTALL NODEJS
 cd /root/
 chmod a+x /usr/bin/kDaemongrab
@@ -147,8 +153,7 @@ Requires=network-online.target
 Requires=/etc/systemd/system/zerotier-one.service
 Requires=docker.service
 [Service]
-ExecStart=/root/kDaemon/kDaemon
-RemainAfterExit=yes
+ExecStart=/usr/bin/kDaemonrun
 [Install]
 WantedBy=multi-user.target
 EOF
