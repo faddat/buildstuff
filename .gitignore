@@ -1,1 +1,17 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen### Packer template
+# Cache objects
+packer_cache/
+
+# For built boxes
+*.box
+
+/.kdev4
+/buildstuff.kdev4
 # Created by .ignore support plugin (hsz.mobi)
