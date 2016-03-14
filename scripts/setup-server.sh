@@ -173,13 +173,20 @@ Requires=kdaemon.service
 Type=simple
 PIDFile=/run/ghost-example-org.pid
 WorkingDirectory=/root/kDaemon-ui
-ExecStart=/usr/bin/npm start /root/kDaemon-ui
-ExecStop=/usr/bin/npm stop /root/kDaemon-ui
+ExecStart=/usr/bin/npm start /usr/bin/kDaemon-ui
+ExecStop=/usr/bin/npm stop /usr/bin/kDaemon-ui
 StandardOutput=null
 StandardError=null
 
 [Install]
 WantedBy=default.target
+EOF
+
+cat <<EOF >/usr/bin/kDaemon-ui;
+#!/bin/sh
+PORT=8081
+cd /root/kDaemon-ui
+npm run start
 EOF
 
 #Weave net Unit File
@@ -232,7 +239,7 @@ EOF
 
 
 #kDaemon configuration file
-cat <<"EOD" >/usr/bin/kdeamonconf
+cat <<"EOD" >/usr/bin/kdeamonconf;
 cat <<EOF >/root/config/app.conf;
 [default]
 bind_ip = $ZT0:2375
