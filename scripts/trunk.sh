@@ -2,6 +2,9 @@
 #BECOME ROOT
 
 sudo su #makes us root on GCE instance
+wget -q -O - http://multipath-tcp.org/mptcp.gpg.key | sudo apt-key add -
+echo "deb http://multipath-tcp.org/repos/apt/debian jessie main" >> /etc/apt/sources.list
+
 
 #INSERT KDAEMON GRAB, WHICH WILL.... grab kdaemon and its UI so they can be started using systemD units
 cat << "EOF" >/usr/bin/kDaemongrab;
@@ -104,7 +107,6 @@ Requires=network-online.target
 Requires=zerotier-one.service
 [Service]
 ExecStart=/usr/bin/zerotier-cli join e5cd7a9e1c87b1c8
-Type=OneShot
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -122,7 +124,7 @@ Requires=network-online.target
 Requires=zerotier.service
 [Service]
 EnvironmentFile=/etc/network-environment
-ExecStart=/usr/bin/consul agent -server -data-dir=/data -ui-dir=/ui -bind=$ZT0_IPV4 -advertise=$ZT0_IPV4 -join=192.168.194.229 -join=192.168.194.141 -join=192.168.194.216 -join=192.168.194.187
+ExecStart=/usr/bin/consul agent -atlas faddat/chicken -atlas-join -server -data-dir=/data -ui-dir=/ui -bind=$ZT0_IPV4 -advertise=$ZT0_IPV4 -atlas_token A4pztQGauNUOLA.atlasv1.q5qbRLBgjY2kdb2Kmw2YGqzoLMAw8nSrNLiD6UYMNrqh4kzGx7nrhYAnCpJxIzzJGtM
 RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target

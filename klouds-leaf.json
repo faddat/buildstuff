@@ -35,8 +35,8 @@
   "iso_checksum_url": "http://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/SHA512SUMS",
   "iso_checksum_type": "sha512",
   "http_directory": "http",
-  "ssh_username": "root",
-  "ssh_password": "pacopower",
+      "ssh_username": "klouds",
+      "ssh_password": "klouds",
   "shutdown_command": "echo 'klouds'|sudo -S shutdown -h now",
   "boot_wait": "5s",
   "boot_command": [
@@ -61,7 +61,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "scripts/setup.sh"
+      "script": "scripts/leaf.sh"
     }
   ]
 }
