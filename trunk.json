@@ -8,7 +8,8 @@
       "zone": "asia-east1-c",
       "disk_size": "25",
       "name": "trunk-gce",
-      "image_name": "trunk-{{timestamp}}"
+      "image_name": "trunk-{{timestamp}}",
+      "machine_type": "n1-standard-2"
     },
     {
       "type": "virtualbox-ovf",
