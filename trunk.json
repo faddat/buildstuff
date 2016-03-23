@@ -1,0 +1,33 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "account_file": "/home/faddat/Desktop/account.json",
+      "project_id": "resonant-truth-120806",
+      "source_image": "debian-8-jessie-v20160301",
+      "zone": "asia-east1-c",
+      "disk_size": "25",
+      "name": "trunk-gce",
+      "image_name": "trunk-{{timestamp}}"
+    },
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "/home/faddat/Documents/debian.ova",
+      "ssh_port": "22",
+      "ssh_username": "root",
+      "ssh_password": "pacopower",
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+      "boot_wait": "30s",
+      "guest_additions_mode": "disable",
+      "vm_name": "trunk-{{timestamp}}",
+      "output_directory": "trunk-{{timestamp}}"
+    }
+    ],
+    "provisioners": [
+    {
+    "type": "shell",
+      "script": "scripts/trunk.sh"
+    }
+    ]
+
+}

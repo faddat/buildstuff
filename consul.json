@@ -7,15 +7,16 @@
       "source_image": "debian-8-jessie-v20160301",
       "zone": "asia-east1-c",
       "disk_size": "25",
-      "name": "klouds-server-gce",
-      "image_name": "server-{{timestamp}}"
+      "name": "consul",
+      "image_name": "consul-{{timestamp}}",
+      "machine_type": "f1-micro"
     },
     {
       "type": "virtualbox-ovf",
       "source_path": "/home/faddat/Documents/debian.ova",
       "ssh_port": "22",
-      "ssh_username": "root",
-      "ssh_password": "osboxes.org",
+      "ssh_username": "faddat",
+      "ssh_password": "pacopower",
       "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
       "boot_wait": "30s",
       "guest_additions_mode": "disable",
@@ -26,7 +27,7 @@
     "provisioners": [
     {
     "type": "shell",
-      "script": "scripts/trunk.sh"
+      "script": "scripts/consul.sh"
     }
     ]
 

@@ -7,7 +7,7 @@
       "source_image": "debian-8-jessie-v20160301",
       "zone": "asia-east1-c",
       "disk_size": "25",
-      "name": "klouds-leaf-gce",
+      "name": "leaf",
       "image_name": "leaf-{{timestamp}}"
     },
     {

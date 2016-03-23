@@ -7,6 +7,7 @@ echo "deb http://multipath-tcp.org/repos/apt/debian jessie main" >> /etc/apt/sou
 apt update
 apt upgrade -y
 apt install -y moreutils nfs-client wget sudo curl ca-certificates linux-mptcp
+apt remove -y linux
 mkdir /storage
 mount 192.168.194.222:/storage /storage
 wget get.docker.io
