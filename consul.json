@@ -3,32 +3,44 @@
     {
       "type": "googlecompute",
       "account_file": "/home/faddat/Desktop/account.json",
-      "project_id": "resonant-truth-120806",
-      "source_image": "debian-8-jessie-v20160301",
+      "project_id": "hip-hangout-126906",
+      "source_image": "debian-8-jessie-v20160329",
       "zone": "asia-east1-c",
-      "disk_size": "25",
+      "disk_size": "10",
       "name": "consul",
       "image_name": "consul-{{timestamp}}",
-      "machine_type": "f1-micro"
+      "machine_type": "n1-standard-2"
     },
     {
       "type": "virtualbox-ovf",
       "source_path": "/home/faddat/Documents/debian.ova",
       "ssh_port": "22",
-      "ssh_username": "faddat",
-      "ssh_password": "pacopower",
+      "ssh_username": "root",
+      "ssh_password": "password",
       "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
       "boot_wait": "30s",
       "guest_additions_mode": "disable",
-      "vm_name": "klouds trunk stack {{timestamp}}",
-      "output_directory": "trunk{{timestamp}}"
+      "vm_name": "consul {{timestamp}}",
+      "output_directory": "consul {{timestamp}}"
     }
     ],
     "provisioners": [
     {
     "type": "shell",
-      "script": "scripts/consul.sh"
+    "script": "scripts/consul.sh"
+    },
+    {
+    "type": "shell",
+    "script": "scripts/virtualbox-guest.sh",
+    "only": ["virtualbox-ovf"]
     }
-    ]
 
+    ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "only": ["virtualbox-ovf"],
+      "keep_input_artifact": false
+    }
+]
 }

@@ -24,6 +24,10 @@ wget https://download.zerotier.com/dist/zerotier-one_1.1.4_amd64.deb
 chmod a+x /usr/local/bin/weave
 chmod a+x /usr/local/bin/scope
 
+#INSTALL SALT
+curl -L https://bootstrap.saltstack.com -o install_salt.sh
+sudo sh install_salt.sh -P
+
 #INSTALLING ZEROTIER
 dpkg -i zerotier-one_1.1.4_amd64.deb
 systemctl restart zerotier-one

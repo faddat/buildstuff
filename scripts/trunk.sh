@@ -82,6 +82,10 @@ wget -O /usr/local/bin/scope https://git.io/scope
 wget https://download.zerotier.com/dist/zerotier-one_1.1.4_amd64.deb
 wget -N -P /opt/bin https://github.com/kelseyhightower/setup-network-environment/releases/download/v1.0.0/setup-network-environment
 
+#INSTALL SALT
+curl -L https://bootstrap.saltstack.com -o install_salt.sh
+sudo sh install_salt.sh -P -M
+
 #MARKING NETWORK COMPONENTS RUNNABLE
 chmod a+x /usr/local/bin/weave
 chmod a+x /usr/local/bin/scope
@@ -108,6 +112,7 @@ Requires=network-online.target
 Requires=zerotier-one.service
 [Service]
 ExecStart=/usr/bin/zerotier
+Type=oneshot
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -115,7 +120,7 @@ EOF
 #ZEROTIER-CLI BASH SCRIPT WITH FIVE SECOND DELAY BEFORE AND AFTER
 cat <<EOF >/usr/bin/zerotier;
 sleep 5s
-zerotier-cli join e5cd7a9e1c87b1c8
+zerotier-cli join e5cd7a9e1c87b1c8 > /result
 sleep 5s
 EOF
 chmod a+x /usr/bin/zerotier
@@ -224,11 +229,10 @@ Requires=network-online.target
 Requires=/etc/systemd/system/zerotier-one.service
 Requires=docker.service
 [Service]
-ExecStart=/usr/bin/consul-template -consul demo.consul.io -template "/tmp/template.ctmpl:/tmp/result"
+ExecStart=/usr/bin/consul-template -consul 192.168.194.45 -template "/root/consul-template/haproxy.tmpl:/etc/haproxy/"
 [Install]
 WantedBy=default.target
 EOF
-
 
 #kDaemon configuration file
 cat <<"EOD" >/usr/bin/kdeamonconf;
@@ -244,10 +248,31 @@ EOF
 EOD
 chmod a+x kdaemonconf
 
+#Consul-template unit file
+cat <<EOF >/etc/systemd/system/consul-template.service;
+[Unit]
+Description=start klouds stack
+After=docker.service
+After=network-online.target
+After=zerotier.service
+Requires=network-online.target
+Requires=/etc/systemd/system/zerotier-one.service
+Requires=docker.service
+[Service]
+ExecStart=/usr/bin/consul-template -consul 192.168.194.45 -template "/root/consul-template/haproxy.tmpl:/etc/haproxy/"
+[Install]
+WantedBy=default.target
+EOF
+
+#kDaemon configuration file
+cat <<"EOD" >/usr/bin/kdeamonconf;
+curl -H 'PddToken: FCDJY2JOFHG2SA3SXWBQT7PUAA3PI6JST62EM5JVPIQ64DQDI7SQ' -d 'domain=domain.com&type=A&subdomain=www&ttl=14400&content=127.0.0.1' 'https://pddimp.yandex.ru/api2/admin/dns/add'soa
+EOD
+chmod a+x kdaemonconf
+
 #get systemd ready to rock when the machine boots and mark boot scripts executable
 systemctl daemon-reload
 systemctl enable haproxy
-systemctl enable consul.service
 systemctl enable kDaemon_ui.service
 systemctl enable server-onboot.service
 systemctl enable docker.service
@@ -257,3 +282,4 @@ systemctl enable kDaemon.service
 systemctl enable weave.service
 systemctl enable scope.service
 systemctl enable consul-template.service
+systemctl enable domainreg.service

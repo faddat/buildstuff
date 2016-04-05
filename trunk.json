@@ -3,8 +3,8 @@
     {
       "type": "googlecompute",
       "account_file": "/home/faddat/Desktop/account.json",
-      "project_id": "resonant-truth-120806",
-      "source_image": "debian-8-jessie-v20160301",
+      "project_id": "hip-hangout-126906",
+      "source_image": "debian-8-jessie-v20160329",
       "zone": "asia-east1-c",
       "disk_size": "25",
       "name": "trunk-gce",
@@ -16,7 +16,7 @@
       "source_path": "/home/faddat/Documents/debian.ova",
       "ssh_port": "22",
       "ssh_username": "root",
-      "ssh_password": "pacopower",
+      "ssh_password": "password",
       "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
       "boot_wait": "30s",
       "guest_additions_mode": "disable",
@@ -30,5 +30,6 @@
       "script": "scripts/trunk.sh"
     }
     ]
-
+  "post-processors": ["vagrant"]
+}
 }
