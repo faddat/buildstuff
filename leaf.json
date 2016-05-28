@@ -31,12 +31,12 @@
       "2"
     ]
   ],
-  "iso_url": "http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-8.3.0-amd64-netinst.iso",
+  "iso_url": "http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso",
   "iso_checksum_url": "http://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/SHA512SUMS",
   "iso_checksum_type": "sha512",
   "http_directory": "http",
-      "ssh_username": "klouds",
-      "ssh_password": "klouds",
+      "ssh_username": "faddat",
+      "ssh_password": "pacopower",
   "shutdown_command": "echo 'klouds'|sudo -S shutdown -h now",
   "boot_wait": "5s",
   "boot_command": [
@@ -63,7 +63,6 @@
       "type": "shell",
       "script": "scripts/leaf.sh"
     }
-  ]
+  ],
   "post-processors": ["vagrant"]
-}
 }

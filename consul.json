@@ -16,7 +16,7 @@
       "source_path": "/home/faddat/Documents/debian.ova",
       "ssh_port": "22",
       "ssh_username": "root",
-      "ssh_password": "password",
+      "ssh_password": "pacopower",
       "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
       "boot_wait": "30s",
       "guest_additions_mode": "disable",
