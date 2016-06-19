@@ -12,7 +12,7 @@ wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
 unzip consul_0.6.4_linux_amd64.zip
 sudo mv consul /usr/bin/consul
 sudo gsutil cp gs://nomad/nomad /usr/bin/nomad
-chmod a+x /usr/bin/nomad
+sudo chmod a+x /usr/bin/nomad
 sudo mkdir /data
 
 #DOWNLOADING NETWORK COMPONENTS
