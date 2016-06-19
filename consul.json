@@ -8,6 +8,7 @@
       "zone": "asia-east1-c",
       "disk_size": "10",
       "name": "consul",
+      "ssh_username": "faddat",
       "image_name": "consul-{{timestamp}}",
       "machine_type": "n1-standard-2"
     },
