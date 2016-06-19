@@ -3,8 +3,8 @@
     {
       "type": "googlecompute",
       "account_file": "/home/faddat/Desktop/account.json",
-      "project_id": "hip-hangout-126906",
-      "source_image": "debian-8-jessie-v20160329",
+      "project_id": "ancient-torch-134323",
+      "source_image": "ubuntu-1604-xenial-v20160610",
       "zone": "asia-east1-c",
       "disk_size": "25",
       "name": "trunk-gce",

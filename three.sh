@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-packer build consul.json
-packer build leaf.sh
-packer build trunk.json
+packer build -except virtualbox-ovf consul.json
+packer build -except qemu leaf.sh
+packer build -except virtualbox-ovf trunk.json

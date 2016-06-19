@@ -1,35 +1,12 @@
 #!/bin/bash
 #BECOME ROOT
 
-sudo su #makes us root on GCE instance
-
-
-
-#INSERT KDAEMON GRAB, WHICH WILL.... grab kdaemon and its UI so they can be started using systemD units
-cat << "EOF" >/usr/bin/kDaemongrab;
-#!/bin/bash
-cd /root
-go get github.com/klouds/kDaemon
-GOBIN=/usr/bin/ go install github.com/klouds/kDaemon
-git clone https://github.com/klouds/kDaemon
-git clone https://github.com/klouds/kDaemon_ui
-cp /usr/bin/kDaemon /root/kDaemon
-cd kDaemon_ui
-npm install
-EOF
-
-cat << "EOF" >/usr/bin/kDaemonrun;
-kdaemonconf
-cd /root/kDaemon
-./kDaemon
-EOF
+sudo -s
+export EXTERNAL=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/‌​0/external-ip)
+export INTERNAL=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/‌​0/internal-ip)
 
 #UPDATING DEBIAN, INSTALL NODEJS
 cd /root/
-chmod a+x /usr/bin/kDaemongrab
-wget -q -O - http://multipath-tcp.org/mptcp.gpg.key | sudo apt-key add -
-echo "deb http://multipath-tcp.org/repos/apt/debian jessie main" >> /etc/apt/sources.list
-curl -sL https://deb.nodesource.com/setup_5.x | bash -
 apt update
 apt install -y moreutils nfs-client nfs-server wget sudo curl unzip nodejs haproxy binutils bison build-essential
 apt upgrade -y
@@ -56,21 +33,6 @@ mkdir /root/config
 mkdir /root/go
 mkdir /storage
 
-#INSTALL RETHINKDB
-echo "deb http://download.rethinkdb.com/apt `lsb_release -cs` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-apt-get update
-apt-get install -y rethinkdb
-cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/instance1.conf
-mkdir /var/lib/rethinkdb/default
-sed -i -e 's/# directory=/var/lib/rethinkdb/default/directory=/var/lib/rethinkdb/default/g' /etc/rethinkdb/instances.d/instance1.conf
-
-#DOWNLOAD AND INSTALL GOLANG
-curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash
-source /root/.gvm/scripts/gvm
-gvm install go1.6 -B
-gvm use go1.6 --default
-
 #DOWNLOAD AND INSTALL CONSUL
 wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip
 unzip consul_0.6.3_linux_amd64.zip
@@ -82,22 +44,14 @@ wget -O /usr/local/bin/scope https://git.io/scope
 wget https://download.zerotier.com/dist/zerotier-one_1.1.4_amd64.deb
 wget -N -P /opt/bin https://github.com/kelseyhightower/setup-network-environment/releases/download/v1.0.0/setup-network-environment
 
-#INSTALL SALT
-curl -L https://bootstrap.saltstack.com -o install_salt.sh
-sudo sh install_salt.sh -P -M
 
 #MARKING NETWORK COMPONENTS RUNNABLE
 chmod a+x /usr/local/bin/weave
 chmod a+x /usr/local/bin/scope
 chmod a+x /opt/bin/setup-network-environment
-chmod a+x /usr/bin/kDaemonrun
-chmod a+x /usr/bin/kDaemongrab
 
 #INSTALLING ZEROTIER
 dpkg -i zerotier-one_1.1.4_amd64.deb
-
-#INSTALLING KDAEMON AND KDAEMON-UI
-kDaemongrab
 
 #I have attempted to list the systemd units in chronological-ish order.  I'm only certain that it's not quite right (the system will execute them in the correct order regardleess).
 
@@ -120,7 +74,7 @@ EOF
 #ZEROTIER-CLI BASH SCRIPT WITH FIVE SECOND DELAY BEFORE AND AFTER
 cat <<EOF >/usr/bin/zerotier;
 sleep 5s
-zerotier-cli join e5cd7a9e1c87b1c8 > /result
+zerotier-cli join 565799d8f6d1ae56 > /result
 sleep 5s
 EOF
 chmod a+x /usr/bin/zerotier
@@ -233,20 +187,6 @@ ExecStart=/usr/bin/consul-template -consul 192.168.194.45 -template "/root/consu
 [Install]
 WantedBy=default.target
 EOF
-
-#kDaemon configuration file
-cat <<"EOD" >/usr/bin/kdeamonconf;
-cat <<EOF >/root/config/app.conf;
-[default]
-bind_ip = $ZT0:2375
-api_port = 4000
-rethinkdb_host = 127.0.0.1
-rethinkdb_port = 28015
-rethinkdb_dbname = stupiddbname
-api_version = 0.0
-EOF
-EOD
-chmod a+x kdaemonconf
 
 #Consul-template unit file
 cat <<EOF >/etc/systemd/system/consul-template.service;

@@ -1,13 +1,6 @@
 #!/bin/sh
 #UPDATING DEBIAN
 sudo -s
-cd /root/
-wget -q -O - http://multipath-tcp.org/mptcp.gpg.key | sudo apt-key add -
-echo "deb http://multipath-tcp.org/repos/apt/debian jessie main" >> /etc/apt/sources.list
-apt update
-apt upgrade -y
-apt install -y moreutils nfs-client wget sudo curl ca-certificates linux-mptcp
-apt remove -y linux
 mkdir /storage
 mount 192.168.194.222:/storage /storage
 wget get.docker.io
@@ -24,14 +17,10 @@ wget https://download.zerotier.com/dist/zerotier-one_1.1.4_amd64.deb
 chmod a+x /usr/local/bin/weave
 chmod a+x /usr/local/bin/scope
 
-#INSTALL SALT
-curl -L https://bootstrap.saltstack.com -o install_salt.sh
-sudo sh install_salt.sh -P
-
 #INSTALLING ZEROTIER
 dpkg -i zerotier-one_1.1.4_amd64.deb
 systemctl restart zerotier-one
-zerotier-cli join e5cd7a9e1c87b1c8
+zerotier-cli join 565799d8f6d1ae56
 systemctl stop docker
 nohup docker daemon -H $(ifdata -pa zt0):2375 -H unix:///var/run/docker.sock &
 export DOCKER_HOST=$(ifdata -pa zt0):2375

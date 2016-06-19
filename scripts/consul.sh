@@ -1,17 +1,10 @@
 #!/bin/sh
-#UPDATING DEBIAN AND INSTALLING DEPENDENCIES
+#UPDATING UBUNTU AND INSTALLING DEPENDENCIES
 sudo -s
-wget -q -O - http://multipath-tcp.org/mptcp.gpg.key | sudo apt-key add -
-echo "deb http://multipath-tcp.org/repos/apt/debian jessie main" >> /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" upgrade  -y --force-yes
-DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install  -y --force-yes moreutils nfs-client nfs-server wget sudo curl unzip linux-mptcp openssh-server
-apt remove -y linux
 wget get.docker.io
 sh index.html
 wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
 unzip consul_0.6.4_linux_amd64.zip
-sed -i -e s/docker daemon/docker daemon --storage-driver=overlay/g /lib/systemd/system/docker.service
 mv consul /usr/bin
 mkdir /data
 
@@ -27,18 +20,13 @@ sudo chmod a+x /usr/local/bin/scope
 #INSTALLING ZEROTIER
 sudo dpkg -i zerotier-one_1.1.4_amd64.deb
 
-#INSTALL SALT
-curl -L https://bootstrap.saltstack.com -o install_salt.sh
-sudo sh install_salt.sh -P
-
 #ZEROTIER-CLI BASH SCRIPT WITH FIVE SECOND DELAY BEFORE AND AFTER
 cat <<EOF >/usr/bin/zerotier;
 sleep 5s
-nohup zerotier-cli join e5cd7a9e1c87b1c8 &
+nohup zerotier-cli join 565799d8f6d1ae56 &
 sleep 5s
 EOF
 chmod a+x /usr/bin/zerotier
-
 
 #ONBOOT SYSTEMD UNIT FILE, RUNS KLOUDS' ONBOOT SCRIPT, WHICH CONNECTS THE VM TO KLOUDS' NETWORK
 cat <<EOF >/etc/systemd/system/consul-onboot.service;
