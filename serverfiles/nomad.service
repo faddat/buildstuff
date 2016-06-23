@@ -1,0 +1,10 @@
+[Unit]
+Description=nomad
+After=docker.service
+After=network-online.target
+After=consul-onboot.service
+Requires=consul-onboot.service
+[Service]
+ExecStart=/usr/bin/nomad-onboot
+[Install]
+WantedBy=multi-user.target

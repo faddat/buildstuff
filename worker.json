@@ -7,21 +7,21 @@
       "source_image": "ubuntu-1604-xenial-v20160610",
       "zone": "asia-east1-c",
       "disk_size": "10",
-      "name": "consul",
+      "name": "worker",
       "ssh_username": "faddat",
-      "image_name": "consul-{{timestamp}}",
+      "image_name": "worker-{{timestamp}}",
       "machine_type": "n1-standard-2"
     }
     ],
-  "provisioners": [
+    "provisioners": [
     {
     "type": "file",
-    "source": "serverfiles",
-    "destination": "/tmp"
+    "source": "workerfiles",
+    "destination": "/tmp/workerfiles"
     },
     {
     "type": "shell",
-    "script": "scripts/consul.sh"
+    "script": "scripts/worker.sh"
     }
     ]
 }

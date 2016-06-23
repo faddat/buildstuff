@@ -1,0 +1,11 @@
+[Unit]
+Description=start klouds stack
+After=docker.service
+After=network-online.target
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/consul-onboot
+
+[Install]
+WantedBy=multi-user.target
