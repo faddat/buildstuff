@@ -3,4 +3,4 @@
 /usr/local/bin/scope launch 104.199.160.171
 weave expose
 sleep 15
-/usr/bin/consul agent -atlas faddat/chicken -server -bind=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/‌​0/external-ip) -advertise=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/access-configs/‌​0/external-ip) -bootstrap-expect=3 -atlas-join -data-dir=/data/consul -atlas-token=yfIkFrF1SUKn5g.atlasv1.9laHhtFl6uAFyNO6qlZxXknpYJKdmix84c66mNryQ8wUHg0fPxqQvpfwlC79WAz4eqc
+/usr/bin/consul agent -atlas faddat/chicken -server -bind=$(curl www.canhazip.com) -advertise=$(curl www.canhazip.com) -bootstrap-expect=3 -atlas-join -data-dir=/data/consul -atlas-token=yfIkFrF1SUKn5g.atlasv1.9laHhtFl6uAFyNO6qlZxXknpYJKdmix84c66mNryQ8wUHg0fPxqQvpfwlC79WAz4eqc
