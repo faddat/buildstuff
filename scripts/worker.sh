@@ -9,6 +9,8 @@ sudo cp /tmp/workerfiles/consul-onboot /usr/bin/consul-onboot
 sudo cp /tmp/workerfiles/consul-onboot.service /etc/systemd/system/consul-onboot.service
 sudo cp /tmp/workerfiles/nomad-onboot /usr/bin/nomad-onboot
 sudo cp /tmp/workerfiles/nomad.service /etc/systemd/system/nomad.service
+sudo wget -O /usr/bin/discovery https://raw.githubusercontent.com/weaveworks/discovery/master/discovery
+sudo chmod a+x /usr/bin/discovery
 sudo apt install -y unzip moreutils build-essential
 wget -qO- https://get.docker.com/ | sh
 wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
