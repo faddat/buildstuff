@@ -1,2 +1,0 @@
-#!/bin/bash
-/usr/bin/consul agent -atlas faddat/chicken -server -bind=$(curl www.canhazip.com) -advertise=$(curl www.canhazip.com) -bootstrap-expect=3 -atlas-join -data-dir=/data/consul -atlas-token=yfIkFrF1SUKn5g.atlasv1.9laHhtFl6uAFyNO6qlZxXknpYJKdmix84c66mNryQ8wUHg0fPxqQvpfwlC79WAz4eqc
