@@ -1,0 +1,9 @@
+[Unit]
+Description=Weave
+After=docker.service
+After=network-online.target
+Before=consul-onboot.service
+[Service]
+ExecStart=/usr/local/bin/weave launch 142.0.199.20 142.0.199.28 142.0.199.76 142.0.199.68
+[Install]
+WantedBy=multi-user.target

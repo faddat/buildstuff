@@ -1,0 +1,9 @@
+[Unit]
+Description=Scope
+After=docker.service
+After=network-online.target
+Requires=docker.service
+[Service]
+ExecStart=/usr/local/bin/scope launch 142.0.199.20 142.0.199.28 142.0.199.76 142.0.199.68
+[Install]
+WantedBy=multi-user.target

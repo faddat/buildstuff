@@ -1,11 +1,15 @@
 [Unit]
-Description=start klouds stack
-After=docker.service
+Description=consul agent
+Requires=network-online.target
+Requires=weave.service
 After=network-online.target
-Requires=docker.service
+After=weave.service
 
 [Service]
-ExecStart=/usr/bin/consul-onboot
+Restart=on-failure
+ExecStart=/usr/bin/consul agent -atlas faddat/chicken -server -bind=$(curl www.canhazip.com) -advertise=$(curl www.canhazip.com) -bootstrap-expect=3 -atlas-join -data-dir=/data/consul -atlas-token=yfIkFrF1SUKn5g.atlasv1.9laHhtFl6uAFyNO6qlZxXknpYJKdmix84c66mNryQ8wUHg0fPxqQvpfwlC79WAz4eqc
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
 
 [Install]
 WantedBy=multi-user.target
